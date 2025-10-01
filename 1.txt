@@ -1,0 +1,1 @@
+ & C:/Users/User/Desktop/курс_мат_прог/V_simplex_code/.venv/Scripts/Activate.ps1
