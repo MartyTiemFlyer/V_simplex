@@ -181,11 +181,11 @@ def phase1_objective(A, b, var_names, basis, artificial_vars):
 
     for i, bi in enumerate(basis):
         if bi in artificial_vars:
-            # вычитаем i-ю строку из obj (w = -(sum rows_with_art))
+            # прибавляем i-ю строку из obj (w = +(sum rows_with_art))
             row = A[i]
             for j in range(n):
-                obj[j] -= row[j]
-            rhs -= float(b[i])
+                obj[j] += row[j]
+            rhs += float(b[i])
 
     return obj, rhs
 
@@ -247,12 +247,12 @@ def simplex_iteration_df(df, basis):
     m, n = df.shape
     var_names = list(df.columns[:-1])  # все переменные, кроме RHS
 
-    # 1. Находим входящую переменную (самый отрицательный в строке w)
+    # 1. Находим входящую переменную (самый положительный в строке w)
     w_row = df.loc["w", var_names]
-    entering = w_row.idxmin()
+    entering = w_row.idxmax()
 
-    if w_row[entering] >= 0:
-        # Решение найдено
+    if w_row[entering] <= 0:
+        # Решение найдено если все коэф в строке цели меньше 0
         return df, basis, None, None, True
 
     # 2. Находим выходящую переменную
